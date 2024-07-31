@@ -7,7 +7,7 @@ class abstractDAO {
     private static $DB_HOST = 'localhost';
     private static $DB_USERNAME = 'root';
     private static $DB_PASSWORD = '';
-    private static $DB_DATABASE = 'blog_platform';
+    private static $DB_DATABASE = 'blog';
 
     function __construct(){
         try{
