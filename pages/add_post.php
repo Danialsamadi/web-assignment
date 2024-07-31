@@ -19,4 +19,19 @@
 
 <main>
     <h2>Add Post</h2>
-    <form action
+    <form action="../server/add_post.php" method="post">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <br>
+        <label for="content">Content:</label>
+        <textarea id="content" name="content" required></textarea>
+        <br>
+        <input type="submit" value="Add Post">
+    </form>
+</main>
+
+<footer>
+    <p>&copy; 2024 Blog Platform. All rights reserved.</p>
+</footer>
+</body>
+</html>

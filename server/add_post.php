@@ -1,29 +1,38 @@
 <?php
 include 'abstractDAO.php';
-session_start();
+session_start(); // Ensure session is started for user authentication
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../pages/login.php");
-    exit();
-}
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $title = $_POST['title'];
+    $content = $_POST['content'];
+    $user_id = $_SESSION['user_id']; // Assuming user_id is stored in session after login
 
-$dao = new abstractDAO();
-$mysqli = $dao->getMysqli();
+    if (!empty($title) && !empty($content)) {
+        $dao = new abstractDAO();
+        $mysqli = $dao->getMysqli();
 
-$user_id = $_SESSION['user_id'];
-$title = $_POST['title'];
-$content = $_POST['content'];
+        $sql = "INSERT INTO posts (title, content, user_id, created_at) VALUES (?, ?, ?, NOW())";
+        $stmt = $mysqli->prepare($sql);
 
-$sql = "INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)";
-$stmt = $mysqli->prepare($sql);
-$stmt->bind_param("iss", $user_id, $title, $content);
+        if ($stmt === false) {
+            die('Prepare failed: ' . $mysqli->error);
+        }
 
-if ($stmt->execute()) {
-    echo "New post created successfully";
+        $stmt->bind_param('ssi', $title, $content, $user_id);
+        $result = $stmt->execute();
+
+        if ($result) {
+            header('Location: ../pages/index.php'); // Redirect to home page after successful post
+        } else {
+            die('Execute failed: ' . $stmt->error);
+        }
+
+        $stmt->close();
+        $mysqli->close();
+    } else {
+        echo "Title and content cannot be empty.";
+    }
 } else {
-    echo "Error: " . $stmt->error;
+    echo "Invalid request method.";
 }
-
-$stmt->close();
-$mysqli->close();
 ?>
