@@ -38,7 +38,7 @@
 
         $post_id = $_GET['id'];
 
-        $sql = "SELECT posts.title, posts.content, posts.image, users.username, posts.created_at 
+        $sql = "SELECT posts.title, posts.content, posts.image, posts.keywords, users.username, posts.created_at 
                     FROM posts 
                     JOIN users ON posts.user_id = users.id 
                     WHERE posts.id=?";
@@ -46,7 +46,7 @@
         $stmt->bind_param("i", $post_id);
         $stmt->execute();
         $stmt->store_result();
-        $stmt->bind_result($title, $content, $image, $username, $created_at);
+        $stmt->bind_result($title, $content, $image, $keywords, $username, $created_at);
         $stmt->fetch();
 
         echo "<h2>" . htmlspecialchars($title) . "</h2>";
@@ -57,7 +57,29 @@
             echo "<img src='" . $src . "' alt='Post Image' style='max-width:100%;height:auto;'/>";
         }
         echo "<div>" . nl2br(htmlspecialchars($content)) . "</div>";
+        if (!empty($keywords)) {
+            echo "<p><strong>Keywords:</strong> " . htmlspecialchars($keywords) . "</p>";
+        }
 
+        $stmt->close();
+
+        // Fetch categories for this post
+        $sql = "SELECT categories.name FROM categories 
+                JOIN post_categories ON categories.id = post_categories.category_id 
+                WHERE post_categories.post_id=?";
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("i", $post_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            echo "<p><strong>Categories:</strong> ";
+            $categories = [];
+            while ($row = $result->fetch_assoc()) {
+                $categories[] = htmlspecialchars($row['name']);
+            }
+            echo implode(", ", $categories);
+            echo "</p>";
+        }
         $stmt->close();
         ?>
     </div>

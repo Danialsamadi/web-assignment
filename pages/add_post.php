@@ -21,17 +21,45 @@
 <div id="main-content">
     <h2>Add a New Post</h2>
     <form action="../server/add_post.php" method="POST" enctype="multipart/form-data">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-        <label for="content">Content:</label>
-        <textarea id="content" name="content" required></textarea>
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*">
-        <button type="submit">Add Post</button>
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="keywords">Keywords:</label>
+            <input type="text" id="keywords" name="keywords">
+        </div>
+        <div class="form-group">
+            <label for="categories">Categories:</label>
+            <select id="categories" name="categories[]" multiple>
+                <?php
+                // Fetch categories from the database
+                include '../server/abstractDAO.php';
+                $dao = new abstractDAO();
+                $mysqli = $dao->getMysqli();
+                $sql = "SELECT id, name FROM categories";
+                $result = $mysqli->query($sql);
+                while ($row = $result->fetch_assoc()) {
+                    echo "<option value='" . $row['id'] . "'>" . htmlspecialchars($row['name']) . "</option>";
+                }
+                $mysqli->close();
+                ?>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
+        <button type="submit" class="submit-button">Add Post</button>
     </form>
 </div>
 
-<!-- FOOTER -->
-
+<footer>
+    <p>&copy; 2024 Blog Platform. All rights reserved.</p>
+</footer>
 </body>
 </html>
