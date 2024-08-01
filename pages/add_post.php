@@ -7,31 +7,31 @@
     <link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
-<header>
-    <h1>Blog Platform</h1>
-    <nav>
-        <a href="index.php">Home</a> |
-        <a href="add_post.php">Add Post</a> |
-        <a href="register.php">Register</a> |
-        <a href="login.php">Login</a>
-    </nav>
-</header>
+<!-- NAVBAR -->
+<div class="navbar">
+    <a class="nav-title-link" href="index.php">
+        <span class="nav-title">Blog Platform</span>
+    </a>
+    <a class="button" href="index.php">
+        <span class="button-text">Home</span>
+    </a>
+</div>
 
-<main>
-    <h2>Add Post</h2>
-    <form action="../server/add_post.php" method="post">
+<!-- MAIN PAGE CONTENT -->
+<div id="main-content">
+    <h2>Add a New Post</h2>
+    <form action="../server/add_post.php" method="POST" enctype="multipart/form-data">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" required>
-        <br>
         <label for="content">Content:</label>
         <textarea id="content" name="content" required></textarea>
-        <br>
-        <input type="submit" value="Add Post">
+        <label for="image">Upload Image:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+        <button type="submit">Add Post</button>
     </form>
-</main>
+</div>
 
-<footer>
-    <p>&copy; 2024 Blog Platform. All rights reserved.</p>
-</footer>
+<!-- FOOTER -->
+
 </body>
 </html>

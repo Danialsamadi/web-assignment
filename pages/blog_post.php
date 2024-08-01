@@ -8,17 +8,27 @@
     <script src="../scripts/ajax_comments.js" defer></script>
 </head>
 <body>
-<header>
-    <h1>Blog Platform</h1>
-    <nav>
-        <a href="index.php">Home</a> |
-        <a href="add_post.php">Add Post</a> |
-        <a href="register.php">Register</a> |
-        <a href="login.php">Login</a>
-    </nav>
-</header>
+<!-- NAVBAR -->
+<div class="navbar">
+    <a class="nav-title-link" href="index.php">
+        <span class="nav-title">Blog Platform</span>
+    </a>
+    <a class="button" href="index.php">
+        <span class="button-text">Home</span>
+    </a>
+    <a class="button" href="add_post.php">
+        <span class="button-text">Add Post</span>
+    </a>
+    <a class="button" href="register.php">
+        <span class="button-text">Register</span>
+    </a>
+    <a class="button" href="login.php">
+        <span class="button-text">Login</span>
+    </a>
+</div>
 
-<main>
+<!-- MAIN CONTENT -->
+<div id="main-content">
     <div id="post">
         <?php
         include '../server/abstractDAO.php';
@@ -28,7 +38,7 @@
 
         $post_id = $_GET['id'];
 
-        $sql = "SELECT posts.title, posts.content, users.username, posts.created_at 
+        $sql = "SELECT posts.title, posts.content, posts.image, users.username, posts.created_at 
                     FROM posts 
                     JOIN users ON posts.user_id = users.id 
                     WHERE posts.id=?";
@@ -36,11 +46,16 @@
         $stmt->bind_param("i", $post_id);
         $stmt->execute();
         $stmt->store_result();
-        $stmt->bind_result($title, $content, $username, $created_at);
+        $stmt->bind_result($title, $content, $image, $username, $created_at);
         $stmt->fetch();
 
-        echo "<h2>" . $title . "</h2>";
-        echo "<p>by " . $username . " on " . $created_at . "</p>";
+        echo "<h2>" . htmlspecialchars($title) . "</h2>";
+        echo "<p>by " . htmlspecialchars($username) . " on " . htmlspecialchars($created_at) . "</p>";
+        if (!empty($image)) {
+            $imgData = base64_encode($image);
+            $src = 'data:image/jpeg;base64,' . $imgData;
+            echo "<img src='" . $src . "' alt='Post Image' style='max-width:100%;height:auto;'/>";
+        }
         echo "<div>" . nl2br(htmlspecialchars($content)) . "</div>";
 
         $stmt->close();
@@ -69,7 +84,7 @@
             while ($stmt->fetch()) {
                 echo "<div class='comment'>";
                 echo "<p>" . nl2br(htmlspecialchars($comment_content)) . "</p>";
-                echo "<p>by " . $comment_username . " on " . $comment_created_at . "</p>";
+                echo "<p>by " . htmlspecialchars($comment_username) . " on " . htmlspecialchars($comment_created_at) . "</p>";
                 echo "</div>";
             }
 
@@ -78,7 +93,7 @@
             ?>
         </div>
     </div>
-</main>
+</div>
 
 <footer>
     <p>&copy; 2024 Blog Platform. All rights reserved.</p>

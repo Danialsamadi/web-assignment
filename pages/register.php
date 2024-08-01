@@ -8,31 +8,44 @@
     <script src="../scripts/validation.js" defer></script>
 </head>
 <body>
-<header>
-    <h1>Blog Platform</h1>
-    <nav>
-        <a href="index.php">Home</a> |
-        <a href="add_post.php">Add Post</a> |
-        <a href="register.php">Register</a> |
-        <a href="login.php">Login</a>
-    </nav>
-</header>
+<!-- NAVBAR -->
+<div class="navbar">
+    <a class="nav-title-link" href="index.php">
+        <span class="nav-title">Blog Platform</span>
+    </a>
+    <a class="button" href="index.php">
+        <span class="button-text">Home</span>
+    </a>
+    <a class="button" href="add_post.php">
+        <span class="button-text">Add Post</span>
+    </a>
+    <a class="button" href="register.php">
+        <span class="button-text">Register</span>
+    </a>
+    <a class="button" href="login.php">
+        <span class="button-text">Login</span>
+    </a>
+</div>
 
-<main>
+<!-- MAIN CONTENT -->
+<div id="main-content">
     <h2>Register</h2>
     <form action="../server/register_user.php" method="post" id="registerForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <input type="submit" value="Register">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <input type="submit" value="Register" class="submit-button">
     </form>
-</main>
+</div>
 
 <footer>
     <p>&copy; 2024 Blog Platform. All rights reserved.</p>
