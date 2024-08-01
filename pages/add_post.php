@@ -66,9 +66,5 @@ if (!isset($_SESSION['user_id'])) {
         <button type="submit" class="submit-button">Add Post</button>
     </form>
 </div>
-
-<footer>
-    <p>&copy; 2024 Blog Platform. All rights reserved.</p>
-</footer>
 </body>
 </html>

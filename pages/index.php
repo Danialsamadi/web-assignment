@@ -8,6 +8,13 @@ session_start(); // Ensure session is started for user authentication
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Platform</title>
     <link rel="stylesheet" href="../styles/style.css">
+    <script>
+        function confirmLogoutAndRegister() {
+            if (confirm("You will be logged out to register a new user. Do you want to continue?")) {
+                window.location.href = "../server/logout.php?redirect=register";
+            }
+        }
+    </script>
 </head>
 <body>
 <!-- NAVBAR -->
@@ -21,14 +28,17 @@ session_start(); // Ensure session is started for user authentication
     <a class="button" href="add_post.php">
         <span class="button-text">Add Post</span>
     </a>
-    <a class="button" href="register.php">
-        <span class="button-text">Register</span>
-    </a>
     <?php if (isset($_SESSION['user_id'])): ?>
+        <a class="button" href="javascript:void(0);" onclick="confirmLogoutAndRegister()">
+            <span class="button-text">Register</span>
+        </a>
         <a class="button" href="../server/logout.php">
             <span class="button-text">Logout</span>
         </a>
     <?php else: ?>
+        <a class="button" href="register.php">
+            <span class="button-text">Register</span>
+        </a>
         <a class="button" href="login.php">
             <span class="button-text">Login</span>
         </a>
@@ -36,6 +46,7 @@ session_start(); // Ensure session is started for user authentication
 </div>
 </body>
 </html>
+
 
 <!-- MAIN CONTENT -->
 <div id="main-content">
