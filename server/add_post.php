@@ -2,6 +2,12 @@
 include 'abstractDAO.php';
 session_start(); // Ensure session is started for user authentication
 
+if (!isset($_SESSION['user_id'])) {
+    // If the user is not logged in, redirect to the login page
+    header('Location: ../pages/login.php');
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
     $content = $_POST['content'];

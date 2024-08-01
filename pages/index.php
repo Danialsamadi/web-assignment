@@ -1,3 +1,6 @@
+<?php
+session_start(); // Ensure session is started for user authentication
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,10 +24,18 @@
     <a class="button" href="register.php">
         <span class="button-text">Register</span>
     </a>
-    <a class="button" href="login.php">
-        <span class="button-text">Login</span>
-    </a>
+    <?php if (isset($_SESSION['user_id'])): ?>
+        <a class="button" href="../server/logout.php">
+            <span class="button-text">Logout</span>
+        </a>
+    <?php else: ?>
+        <a class="button" href="login.php">
+            <span class="button-text">Login</span>
+        </a>
+    <?php endif; ?>
 </div>
+</body>
+</html>
 
 <!-- MAIN CONTENT -->
 <div id="main-content">

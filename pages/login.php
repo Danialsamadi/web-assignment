@@ -1,3 +1,46 @@
+<?php
+session_start(); // Ensure session is started for user authentication
+
+if (isset($_SESSION['user_id'])) {
+    // If the user is already logged in, redirect to the home page
+    header('Location: index.php');
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Your login logic here
+    // Example:
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    include '../server/abstractDAO.php';
+    $dao = new abstractDAO();
+    $mysqli = $dao->getMysqli();
+
+    $sql = "SELECT id, password FROM users WHERE username=?";
+    $stmt = $mysqli->prepare($sql);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($user_id, $hashed_password);
+    $stmt->fetch();
+
+    if ($stmt->num_rows == 1 && password_verify($password, $hashed_password)) {
+        // User authenticated, set session variables
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['username'] = $username;
+        header('Location: index.php');
+        exit();
+    } else {
+        // Invalid credentials
+        $error = "Invalid username or password.";
+    }
+
+    $stmt->close();
+    $mysqli->close();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +72,10 @@
 <!-- MAIN CONTENT -->
 <div id="main-content">
     <h2>Login</h2>
-    <form action="../server/login_user.php" method="post" id="loginForm">
+    <?php if (isset($error)): ?>
+        <p style="color:red;"><?php echo $error; ?></p>
+    <?php endif; ?>
+    <form action="login.php" method="POST" class="login-form">
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
@@ -38,7 +84,7 @@
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
-        <input type="submit" value="Login" class="submit-button">
+        <button type="submit" class="submit-button">Login</button>
     </form>
 </div>
 

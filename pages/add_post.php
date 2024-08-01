@@ -1,3 +1,12 @@
+<?php
+session_start(); // Ensure session is started for user authentication
+
+if (!isset($_SESSION['user_id'])) {
+    // If the user is not logged in, redirect to the login page
+    header('Location: login.php');
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +29,7 @@
 <!-- MAIN PAGE CONTENT -->
 <div id="main-content">
     <h2>Add a New Post</h2>
-    <form action="../server/add_post.php" method="POST" enctype="multipart/form-data">
+    <form action="../server/add_post.php" method="POST" enctype="multipart/form-data" class="add-post-form">
         <div class="form-group">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>
