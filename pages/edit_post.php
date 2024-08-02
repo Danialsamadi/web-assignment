@@ -108,6 +108,45 @@ $mysqli->close();
             return true;
         }
     </script>
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .post img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+        .image-buttons {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .image-buttons button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 150px;
+        }
+        .image-buttons button.delete {
+            background-color: #dc3545;
+        }
+    </style>
 </head>
 <body>
 <!-- NAVBAR -->
@@ -142,17 +181,29 @@ $mysqli->close();
         </div>
     <?php endif; ?>
     <form action="edit_post.php?id=<?php echo $post_id; ?>" method="POST" enctype="multipart/form-data" onsubmit="return validateImageSize()">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
-        <label for="content">Content:</label>
-        <textarea id="content" name="content" required><?php echo htmlspecialchars($content); ?></textarea>
-        <label for="image">Upload Image:</label>
-        <input type="file" id="image" name="image" accept="image/*">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Content:</label>
+            <textarea id="content" name="content" required><?php echo htmlspecialchars($content); ?></textarea>
+        </div>
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*">
+        </div>
         <?php if (!empty($image)): ?>
-            <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" alt="Post Image" style="max-width:100%;height:auto;">
-            <button type="submit" name="delete_image" class="delete-image-button">Delete Image</button>
+            <div class="post">
+                <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" alt="Post Image">
+                <div class="image-buttons">
+                    <button type="submit" name="delete_image" class="delete">Delete Image</button>
+                </div>
+            </div>
         <?php endif; ?>
-        <button type="submit">Update Post</button>
+        <div class="image-buttons">
+            <button type="submit">Update Post</button>
+        </div>
     </form>
 </div>
 

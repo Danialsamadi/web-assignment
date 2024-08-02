@@ -20,13 +20,14 @@ $user_stmt->bind_result($username, $email, $created_at);
 $user_stmt->fetch();
 $user_stmt->close();
 
-// Fetch user's posts
-$post_sql = "SELECT id, title, content, created_at FROM posts WHERE user_id=? ORDER BY created_at DESC";
-$post_stmt = $mysqli->prepare($post_sql);
-$post_stmt->bind_param("i", $user_id);
-$post_stmt->execute();
-$post_result = $post_stmt->get_result();
+// Fetch user posts
+$posts_sql = "SELECT id, title, content, image, created_at FROM posts WHERE user_id=? ORDER BY created_at DESC";
+$posts_stmt = $mysqli->prepare($posts_sql);
+$posts_stmt->bind_param("i", $user_id);
+$posts_stmt->execute();
+$posts_stmt->bind_result($post_id, $title, $content, $image, $post_created_at);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,9 +48,6 @@ $post_result = $post_stmt->get_result();
     <a class="button" href="add_post.php">
         <span class="button-text">Add Post</span>
     </a>
-    <a class="button" href="account.php">
-        <span class="button-text">My Account</span>
-    </a>
     <a class="button" href="../server/logout.php">
         <span class="button-text">Logout</span>
     </a>
@@ -58,32 +56,23 @@ $post_result = $post_stmt->get_result();
 <!-- MAIN CONTENT -->
 <div id="main-content">
     <h2>My Account</h2>
-    <div>
-        <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
-        <p><strong>Account Created:</strong> <?php echo htmlspecialchars($created_at); ?></p>
-    </div>
-    <h2>My Posts</h2>
-    <div id="posts">
-        <?php
-        if ($post_result->num_rows > 0) {
-            while ($row = $post_result->fetch_assoc()) {
-                echo "<article>";
-                echo "<h3><a href='edit_post.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['title']) . "</a></h3>";
-                echo "<p>" . htmlspecialchars(substr($row['content'], 0, 150)) . "...</p>";
-                echo "<p>Posted on " . htmlspecialchars($row['created_at']) . "</p>";
-                echo "<a href='edit_post.php?id=" . $row['id'] . "'>Edit</a> | ";
-                echo "<a href='../server/delete_post.php?id=" . $row['id'] . "' onclick='return confirm(\"Are you sure you want to delete this post?\");'>Delete</a>";
-                echo "</article>";
-            }
-        } else {
-            echo "<p>No posts found.</p>";
-        }
+    <p><strong>Username:</strong> <?php echo htmlspecialchars($username); ?></p>
+    <p><strong>Email:</strong> <?php echo htmlspecialchars($email); ?></p>
+    <p><strong>Member since:</strong> <?php echo htmlspecialchars($created_at); ?></p>
 
-        $post_stmt->close();
-        $mysqli->close();
-        ?>
-    </div>
+    <h2>My Posts</h2>
+    <?php while ($posts_stmt->fetch()): ?>
+        <div class="post">
+            <h3><a href="blog_post.php?id=<?php echo $post_id; ?>"><?php echo htmlspecialchars($title); ?></a></h3>
+            <?php if (!empty($image)): ?>
+                <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" alt="Post Image" style="max-width:100%;height:auto;">
+            <?php endif; ?>
+            <p><?php echo htmlspecialchars(substr($content, 0, 150)); ?>...</p>
+            <p><a href="edit_post.php?id=<?php echo $post_id; ?>">Edit</a> | <a href="../server/delete_post.php?id=<?php echo $post_id; ?>" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a></p>
+            <p><small>Posted on: <?php echo htmlspecialchars($post_created_at); ?></small></p>
+        </div>
+    <?php endwhile; ?>
+    <?php $posts_stmt->close(); ?>
 </div>
 
 <footer>
@@ -91,3 +80,4 @@ $post_result = $post_stmt->get_result();
 </footer>
 </body>
 </html>
+<?php $mysqli->close(); ?>

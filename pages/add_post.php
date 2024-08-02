@@ -36,8 +36,9 @@ if (!isset($_SESSION['user_id'])) {
         <span class="button-text">Home</span>
     </a>
     <?php if (isset($_SESSION['user_id'])): ?>
-        <a class="button" href="javascript:void(0);" onclick="confirmLogoutAndRegister()">
-            <span class="button-text">Register</span>
+
+        <a class="button" href="account.php">
+            <span class="button-text">My Account</span>
         </a>
         <a class="button" href="../server/logout.php">
             <span class="button-text">Logout</span>
