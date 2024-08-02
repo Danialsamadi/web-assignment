@@ -79,7 +79,7 @@ The Blog Platform is a web application that allows users to create, edit, and de
 ### Configuration
 1. Clone the repository to your web server's root directory:
     ```sh
-    git clone [https://github.com/yourusername/blog-platform.git](https://github.com/Danialsamadi/web-assignment)
+    git clone https://github.com/Danialsamadi/web-assignment
     ```
 
 2. Update the database connection details in `abstractDAO.php`
