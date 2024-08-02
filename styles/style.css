@@ -123,6 +123,7 @@ textarea {
 /* Article styles */
 article {
     margin: 2em auto; /* Add auto margin to center the post element */
+    padding-bottom: 1em;
     border-bottom: 1px solid #ddd;
     text-align: center; /* Center-align text inside articles */
     max-width: 600px; /* Set a max-width for the article element */
@@ -204,6 +205,22 @@ article img, #post img {
 
 .comment p {
     margin-bottom: 0.5em;
+}
+
+/* Alert styles */
+.alert {
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center; /* Center-align alert text */
+    width: 100%; /* Full width for better visibility */
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 /* Footer styles */

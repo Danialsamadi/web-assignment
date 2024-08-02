@@ -18,7 +18,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Handle file upload
     $image = null;
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $image = file_get_contents($_FILES['image']['tmp_name']);
+        if ($_FILES['image']['size'] <= 600 * 1024) { // 600 KB
+            $image = file_get_contents($_FILES['image']['tmp_name']);
+        } else {
+            die('Image size should not exceed 600 KB');
+        }
     }
 
     if (!empty($title) && !empty($content)) {

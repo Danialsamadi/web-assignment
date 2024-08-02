@@ -14,6 +14,17 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Post</title>
     <link rel="stylesheet" href="../styles/style.css">
+    <script>
+        function validateImageSize() {
+            const fileInput = document.getElementById('image');
+            const file = fileInput.files[0];
+            if (file && file.size > 600 * 1024) { // 600 KB
+                alert('Image size should not exceed 600 KB');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
 <body>
 <!-- NAVBAR -->
@@ -44,7 +55,7 @@ if (!isset($_SESSION['user_id'])) {
 <!-- MAIN PAGE CONTENT -->
 <div id="main-content">
     <h2>Add a New Post</h2>
-    <form action="../server/add_post.php" method="POST" enctype="multipart/form-data" class="add-post-form">
+    <form action="../server/add_post.php" method="POST" enctype="multipart/form-data" class="add-post-form" onsubmit="return validateImageSize()">
         <div class="form-group">
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>

@@ -1,5 +1,11 @@
 <?php
 session_start(); // Ensure session is started for user authentication
+
+// Fetch search and filter parameters from the query string
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$category = isset($_GET['category']) ? $_GET['category'] : '';
+$author = isset($_GET['author']) ? $_GET['author'] : '';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -8,13 +14,6 @@ session_start(); // Ensure session is started for user authentication
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Platform</title>
     <link rel="stylesheet" href="../styles/style.css">
-    <script>
-        function confirmLogoutAndRegister() {
-            if (confirm("You will be logged out to register a new user. Do you want to continue?")) {
-                window.location.href = "../server/logout.php?redirect=register";
-            }
-        }
-    </script>
 </head>
 <body>
 <!-- NAVBAR -->
@@ -29,8 +28,8 @@ session_start(); // Ensure session is started for user authentication
         <span class="button-text">Add Post</span>
     </a>
     <?php if (isset($_SESSION['user_id'])): ?>
-        <a class="button" href="javascript:void(0);" onclick="confirmLogoutAndRegister()">
-            <span class="button-text">Register</span>
+        <a class="button" href="account.php">
+            <span class="button-text">My Account</span>
         </a>
         <a class="button" href="../server/logout.php">
             <span class="button-text">Logout</span>
@@ -44,16 +43,18 @@ session_start(); // Ensure session is started for user authentication
         </a>
     <?php endif; ?>
 </div>
-</body>
-</html>
-
 
 <!-- MAIN CONTENT -->
 <div id="main-content">
+    <?php if (isset($_GET['message']) && isset($_GET['message_type'])): ?>
+        <div class="alert <?php echo htmlspecialchars($_GET['message_type']); ?>">
+            <?php echo htmlspecialchars($_GET['message']); ?>
+        </div>
+    <?php endif; ?>
     <h2>Recent Blog Posts</h2>
-    <form method="GET" action="index.php">
+    <form action="index.php" method="GET">
         <label for="search">Search:</label>
-        <input type="text" id="search" name="search">
+        <input type="text" id="search" name="search" value="<?php echo htmlspecialchars($search); ?>">
         <label for="category">Category:</label>
         <select id="category" name="category">
             <option value="">All</option>
@@ -62,10 +63,11 @@ session_start(); // Ensure session is started for user authentication
             include '../server/abstractDAO.php';
             $dao = new abstractDAO();
             $mysqli = $dao->getMysqli();
-            $sql = "SELECT id, name FROM categories";
-            $result = $mysqli->query($sql);
-            while ($row = $result->fetch_assoc()) {
-                echo "<option value='" . $row['id'] . "'>" . htmlspecialchars($row['name']) . "</option>";
+            $category_sql = "SELECT id, name FROM categories";
+            $category_result = $mysqli->query($category_sql);
+            while ($category_row = $category_result->fetch_assoc()) {
+                $selected = $category == $category_row['id'] ? 'selected' : '';
+                echo "<option value='" . $category_row['id'] . "' $selected>" . htmlspecialchars($category_row['name']) . "</option>";
             }
             ?>
         </select>
@@ -74,10 +76,11 @@ session_start(); // Ensure session is started for user authentication
             <option value="">All</option>
             <?php
             // Fetch authors from the database
-            $sql = "SELECT id, username FROM users";
-            $result = $mysqli->query($sql);
-            while ($row = $result->fetch_assoc()) {
-                echo "<option value='" . $row['id'] . "'>" . htmlspecialchars($row['username']) . "</option>";
+            $author_sql = "SELECT id, username FROM users";
+            $author_result = $mysqli->query($author_sql);
+            while ($author_row = $author_result->fetch_assoc()) {
+                $selected = $author == $author_row['id'] ? 'selected' : '';
+                echo "<option value='" . $author_row['id'] . "' $selected>" . htmlspecialchars($author_row['username']) . "</option>";
             }
             ?>
         </select>
@@ -85,21 +88,16 @@ session_start(); // Ensure session is started for user authentication
     </form>
     <div id="posts">
         <?php
-        // Handle filtering
-        $search = isset($_GET['search']) ? $_GET['search'] : '';
-        $category = isset($_GET['category']) ? $_GET['category'] : '';
-        $author = isset($_GET['author']) ? $_GET['author'] : '';
-
-        $sql = "SELECT posts.id, posts.title, posts.content, posts.image, posts.keywords, users.username, posts.created_at 
-                    FROM posts 
-                    JOIN users ON posts.user_id = users.id 
-                    LEFT JOIN post_categories ON posts.id = post_categories.post_id 
-                    LEFT JOIN categories ON categories.id = post_categories.category_id 
-                    WHERE (? = '' OR (posts.title LIKE ? OR posts.content LIKE ? OR posts.keywords LIKE ?))
-                    AND (? = '' OR categories.id = ?)
-                    AND (? = '' OR users.id = ?)
-                    GROUP BY posts.id
-                    ORDER BY posts.created_at DESC";
+        $sql = "SELECT posts.id, posts.title, posts.content, posts.image, users.username, posts.created_at 
+                FROM posts 
+                JOIN users ON posts.user_id = users.id 
+                LEFT JOIN post_categories ON posts.id = post_categories.post_id 
+                LEFT JOIN categories ON categories.id = post_categories.category_id 
+                WHERE (? = '' OR (posts.title LIKE ? OR posts.content LIKE ? OR posts.keywords LIKE ?))
+                AND (? = '' OR categories.id = ?)
+                AND (? = '' OR users.id = ?)
+                GROUP BY posts.id
+                ORDER BY posts.created_at DESC";
         $stmt = $mysqli->prepare($sql);
 
         if ($stmt === false) {
