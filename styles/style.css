@@ -14,39 +14,58 @@ body {
 }
 
 /* Navbar styles */
+/* Existing styles */
+
+/* Add responsive styles */
 .navbar {
-    background-color: #333;
-    color: #fff;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em;
+    background-color: #333;
+    padding: 10px;
 }
 
 .navbar a {
-    color: #fff;
+    color: white;
     text-decoration: none;
-    margin: 0 0.5em;
+    padding: 10px;
 }
 
-.nav-title {
-    font-size: 1.5em;
-    font-weight: bold;
+.navbar .menu-icon {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
 }
 
-.button {
-    background-color: #555;
-    padding: 0.5em 1em;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+.nav-links {
+    display: flex;
+    gap: 15px;
 }
 
-.button:hover {
-    background-color: #777;
-}
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        background-color: #333;
+    }
 
-.button-text {
-    font-size: 1em;
+    .nav-links a {
+        text-align: center;
+        padding: 10px;
+        border-top: 1px solid #444;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .navbar .menu-icon {
+        display: block;
+    }
 }
 
 /* Main content styles */
