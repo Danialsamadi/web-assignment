@@ -1,7 +1,7 @@
 # Blog Platform
 
 ## Overview
-The Blog Platform is a web application that allows users to create, edit, and delete blog posts. It supports user authentication, categorization of posts, and image uploads. Users can also search for posts based on keywords, categories, or authors.
+The Blog Platform is a web application developed for a college web programming course. It allows users to create, edit, and delete blog posts. It supports user authentication, categorization of posts, and image uploads. Users can also search for posts based on keywords, categories, or authors.
 
 ## Features
 - User authentication (login, logout, registration)
