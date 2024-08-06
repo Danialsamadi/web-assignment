@@ -71,9 +71,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <span class="button-text">Logout</span>
         </a>
     <?php else: ?>
-        <a class="button" href="register.php">
-            <span class="button-text">Register</span>
-        </a>
         <a class="button" href="login.php">
             <span class="button-text">Login</span>
         </a>
