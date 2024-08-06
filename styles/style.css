@@ -71,6 +71,16 @@ body {
     }
 }
 
+#main-content .post-title a {
+    font-size: 1em;
+    color: #000;
+    text-decoration: none;
+}
+
+#main-content .post-title a:hover {
+    text-decoration: underline;
+}
+
 /* Main content styles */
 #main-content {
     max-width: 1000px;
@@ -198,6 +208,22 @@ article img, #post img {
     margin-bottom: 1em;
 }
 
+article img, .post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 1em;
+}
+
+/* Specific styling for images in the account section */
+.account-info .my-posts .post img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 1em;
+    display: block;
+}
+
 .comment {
     background: #f9f9f9;
     padding: 1em;
@@ -207,7 +233,7 @@ article img, #post img {
     text-align: left;
 }
 
-.delete-comment-button {
+#delete-comment-button {
     background-color: #e74c3c;
     color: white;
     border: none;
@@ -220,6 +246,38 @@ article img, #post img {
 .delete-comment-button:hover {
     background-color: #c0392b;
 }
+
+/* Edit and delete buttons */
+.edit-comment-button, .delete-post-a-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 5px;
+    display: inline-block;
+}
+
+.edit-comment-button:hover {
+    background-color: #555;
+}
+
+.delete-post-a-button:hover {
+    background-color: #e74c3c;
+}
+
+.edit-comment-button a, .delete-post-a-button a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.edit-comment-button a:hover, .delete-post-a-button a:hover {
+    text-decoration: none;
+}
+
 
 /* Comments section styles */
 #comments h3 {
@@ -308,6 +366,15 @@ footer {
     background: #fff;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    color: #fff;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin: 5px;
+    display: inline-block; 
 }
 
 .account-info h2 {

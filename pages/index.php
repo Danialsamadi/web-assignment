@@ -115,7 +115,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
                 if ($row['user_id'] == $user_id) {
                     echo "<form method='POST' action='../server/delete_post.php' onsubmit='return confirm(\"Are you sure you want to delete this post?\")'>";
                     echo "<input type='hidden' name='post_id' value='" . $row['id'] . "'>";
-                    echo "<button type='submit' class='delete-button'>Delete</button>";
+                    echo "<button type='submit' class='delete-comment-button'>Delete</button>";
                     echo "</form>";
                 }
                 echo "</article>";
