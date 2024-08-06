@@ -17,10 +17,10 @@ body {
 /* Navbar styles */
 .navbar {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     background-color: #333;
-    padding: 10px 20px;
+    padding: 10px 20px; 
     position: fixed;
     top: 0;
     width: 100%;
@@ -46,19 +46,19 @@ body {
 }
 
 @media (max-width: 768px) {
+
     .nav-links {
-        display: none;
-        flex-direction: column;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
         width: 100%;
-        position: absolute;
-        top: 50px;
-        left: 0;
+        position: relative;
         background-color: #333;
     }
 
     .nav-links a {
         text-align: center;
-        padding: 10px;
+        padding: 5px;
         border-top: 1px solid #444;
     }
 
@@ -91,11 +91,6 @@ body {
     border-radius: 10px;
 }
 
-@media (max-width: 768px) {
-    #main-content {
-        padding: 1em;
-    }
-}
 
 /* Post title and metadata styles */
 .post-title {
