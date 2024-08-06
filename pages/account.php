@@ -53,12 +53,18 @@ $posts_stmt->bind_result($post_id, $title, $content, $image, $post_created_at);
     <h2>My Posts</h2>
     <?php while ($posts_stmt->fetch()): ?>
         <div class="post">
-            <h3><a href="blog_post.php?id=<?php echo $post_id; ?>"><?php echo htmlspecialchars($title); ?></a></h3>
+            <h2 class='post-title'>
+                <a href='blog_post.php?id=<?php echo $post_id; ?>'><?php echo htmlspecialchars($title); ?></a>
+            </h2>
             <?php if (!empty($image)): ?>
                 <img src="data:image/jpeg;base64,<?php echo base64_encode($image); ?>" alt="Post Image">
             <?php endif; ?>
             <p><?php echo htmlspecialchars(substr($content, 0, 150)); ?>...</p>
-            <p><a href="edit_post.php?id=<?php echo $post_id; ?>">Edit</a> | <a href="../server/delete_post.php?id=<?php echo $post_id; ?>" onclick="return confirm('Are you sure you want to delete this post?');">Delete</a></p>
+            <p>
+    <button class='edit-comment-button' onclick="window.location.href='edit_post.php?id=<?php echo $post_id; ?>'">Edit</button>
+    <button class='delete-post-a-button' onclick="if(confirm('Are you sure you want to delete this post?')) { window.location.href='../server/delete_post.php?id=<?php echo $post_id; ?>'; }">Delete</button>
+</p>
+
             <p><small>Posted on: <?php echo htmlspecialchars($post_created_at); ?></small></p>
         </div>
     <?php endwhile; ?>
