@@ -1,6 +1,5 @@
 <?php
-session_start(); // Ensure session is started for user authentication
-
+session_start();
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit();
@@ -12,7 +11,6 @@ $mysqli = $dao->getMysqli();
 $user_id = $_SESSION['user_id'];
 $post_id = $_GET['id'];
 
-// Fetch post details
 $post_sql = "SELECT title, content, image FROM posts WHERE id=? AND user_id=?";
 $post_stmt = $mysqli->prepare($post_sql);
 $post_stmt->bind_param("ii", $post_id, $user_id);
@@ -23,7 +21,6 @@ $post_stmt->close();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['delete_image'])) {
-        // Delete image
         $update_sql = "UPDATE posts SET image=NULL WHERE id=? AND user_id=?";
         $update_stmt = $mysqli->prepare($update_sql);
         $update_stmt->bind_param("ii", $post_id, $user_id);
@@ -37,20 +34,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $imageUpdated = false;
         $imageError = '';
 
-        // Handle image upload
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-            if ($_FILES['image']['size'] <= 600 * 1024) { // 600 KB
+            if ($_FILES['image']['size'] <= 600 * 1024) {
                 $image = file_get_contents($_FILES['image']['tmp_name']);
                 $imageUpdated = true;
-
-                // Add error logging
-                error_log('Image size: ' . $_FILES['image']['size']);
-                error_log('Image error: ' . $_FILES['image']['error']);
-                error_log('Image content length: ' . strlen($image));
             } else {
                 die('Image size should not exceed 600 KB');
             }
-        } elseif ($_FILES['image']['error'] != 4) { // 4 means no file was uploaded
+        } elseif ($_FILES['image']['error'] != 4) {
             $imageError = "Image upload error: " . $_FILES['image']['error'];
         }
 
@@ -97,79 +88,20 @@ $mysqli->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Post</title>
     <link rel="stylesheet" href="../styles/style.css">
-    <script>
-        function validateImageSize() {
-            const fileInput = document.getElementById('image');
-            const file = fileInput.files[0];
-            if (file && file.size > 600 * 1024) { // 600 KB
-                alert('Image size should not exceed 600 KB');
-                return false;
-            }
-            return true;
-        }
-    </script>
-    <style>
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input[type="text"],
-        .form-group textarea,
-        .form-group input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .post img {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-            height: auto;
-        }
-        .image-buttons {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .image-buttons button {
-            margin: 5px;
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 150px;
-        }
-        .image-buttons button.delete {
-            background-color: #dc3545;
-        }
-    </style>
 </head>
 <body>
-<!-- NAVBAR -->
-<div class="navbar">
-    <a class="nav-title-link" href="index.php">
-        <span class="nav-title">Blog Platform</span>
-    </a>
-    <a class="button" href="index.php">
-        <span class="button-text">Home</span>
-    </a>
-    <a class="button" href="add_post.php">
-        <span class="button-text">Add Post</span>
-    </a>
-    <a class="button" href="account.php">
-        <span class="button-text">My Account</span>
-    </a>
-    <a class="button" href="../server/logout.php">
-        <span class="button-text">Logout</span>
-    </a>
-</div>
+<header class="navbar">
+    <a class="nav-title-link" href="index.php"><span class="nav-title">Blog Platform</span></a>
+    <nav class="nav-links">
+        <a href="index.php">Home</a>
+        <a href="add_post.php">Add Post</a>
+        <a href="account.php">My Account</a>
+        <a href="../server/logout.php">Logout</a>
+    </nav>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+</header>
 
-<!-- MAIN CONTENT -->
-<div id="main-content">
+<main id="main-content">
     <h2>Edit Post</h2>
     <?php if (isset($error)): ?>
         <div class="alert error">
@@ -205,10 +137,27 @@ $mysqli->close();
             <button type="submit">Update Post</button>
         </div>
     </form>
-</div>
+</main>
 
 <footer>
     <p>&copy; 2024 Blog Platform. All rights reserved.</p>
 </footer>
+
+<script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
+
+    function validateImageSize() {
+        const fileInput = document.getElementById('image');
+        const file = fileInput.files[0];
+        if (file && file.size > 600 * 1024) {
+            alert('Image size should not exceed 600 KB');
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

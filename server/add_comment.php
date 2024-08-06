@@ -2,8 +2,14 @@
 include 'abstractDAO.php';
 session_start();
 
+header('Content-Type: application/json');
+
+$response = [];
+
 if (!isset($_SESSION['user_id'])) {
-    echo "You must be logged in to comment.";
+    $response['status'] = 'error';
+    $response['message'] = 'You must be logged in to comment.';
+    echo json_encode($response);
     exit();
 }
 
@@ -19,11 +25,15 @@ $stmt = $mysqli->prepare($sql);
 $stmt->bind_param("iis", $post_id, $user_id, $content);
 
 if ($stmt->execute()) {
-    echo "New comment added successfully";
+    $response['status'] = 'success';
+    $response['comment_id'] = $mysqli->insert_id;
 } else {
-    echo "Error: " . $stmt->error;
+    $response['status'] = 'error';
+    $response['message'] = 'Error: ' . $stmt->error;
 }
 
 $stmt->close();
 $mysqli->close();
+
+echo json_encode($response);
 ?>

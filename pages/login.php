@@ -1,15 +1,11 @@
 <?php
-session_start(); // Ensure session is started for user authentication
-
+session_start();
 if (isset($_SESSION['user_id'])) {
-    // If the user is already logged in, redirect to the home page
     header('Location: index.php');
     exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Your login logic here
-    // Example:
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -26,13 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->fetch();
 
     if ($stmt->num_rows == 1 && password_verify($password, $hashed_password)) {
-        // User authenticated, set session variables
         $_SESSION['user_id'] = $user_id;
         $_SESSION['username'] = $username;
         header('Location: index.php');
         exit();
     } else {
-        // Invalid credentials
         $error = "Invalid username or password.";
     }
 
@@ -40,58 +34,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mysqli->close();
 }
 ?>
-
-<?php
-session_start(); // Ensure session is started for user authentication
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Platform</title>
+    <title>Login</title>
     <link rel="stylesheet" href="../styles/style.css">
-    <script>
-        function confirmLogoutAndRegister() {
-            if (confirm("You will be logged out to register a new user. Do you want to continue?")) {
-                window.location.href = "../server/logout.php?redirect=register";
-            }
-        }
-    </script>
 </head>
 <body>
-<!-- NAVBAR -->
-<div class="navbar">
-    <a class="nav-title-link" href="index.php">
-        <span class="nav-title">Blog Platform</span>
-    </a>
-    <a class="button" href="index.php">
-        <span class="button-text">Home</span>
-    </a>
-    <a class="button" href="add_post.php">
-        <span class="button-text">Add Post</span>
-    </a>
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <a class="button" href="javascript:void(0);" onclick="confirmLogoutAndRegister()">
-            <span class="button-text">Register</span>
-        </a>
-        <a class="button" href="../server/logout.php">
-            <span class="button-text">Logout</span>
-        </a>
-    <?php else: ?>
-        <a class="button" href="register.php">
-            <span class="button-text">Register</span>
-        </a>
-        <a class="button" href="login.php">
-            <span class="button-text">Login</span>
-        </a>
-    <?php endif; ?>
-</div>
-</body>
-</html>
+<header class="navbar">
+    <a class="nav-title-link" href="index.php"><span class="nav-title">Blog Platform</span></a>
+    <nav class="nav-links">
+        <a href="index.php">Home</a>
+        <a href="add_post.php">Add Post</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="javascript:void(0);" onclick="confirmLogoutAndRegister()">Register</a>
+            <a href="../server/logout.php">Logout</a>
+        <?php else: ?>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
+        <?php endif; ?>
+    </nav>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+</header>
 
-<!-- MAIN CONTENT -->
-<div id="main-content">
+<main id="main-content">
     <h2>Login</h2>
     <?php if (isset($error)): ?>
         <p style="color:red;"><?php echo $error; ?></p>
@@ -107,10 +75,17 @@ session_start(); // Ensure session is started for user authentication
         </div>
         <button type="submit" class="submit-button">Login</button>
     </form>
-</div>
+</main>
 
 <footer>
     <p>&copy; 2024 Blog Platform. All rights reserved.</p>
 </footer>
+
+<script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
+</script>
 </body>
 </html>

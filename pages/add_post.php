@@ -1,8 +1,6 @@
 <?php
-session_start(); // Ensure session is started for user authentication
-
+session_start();
 if (!isset($_SESSION['user_id'])) {
-    // If the user is not logged in, redirect to the login page
     header('Location: login.php');
     exit();
 }
@@ -14,47 +12,24 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Post</title>
     <link rel="stylesheet" href="../styles/style.css">
-    <script>
-        function validateImageSize() {
-            const fileInput = document.getElementById('image');
-            const file = fileInput.files[0];
-            if (file && file.size > 600 * 1024) { // 600 KB
-                alert('Image size should not exceed 600 KB');
-                return false;
-            }
-            return true;
-        }
-    </script>
 </head>
 <body>
-<!-- NAVBAR -->
-<div class="navbar">
-    <a class="nav-title-link" href="index.php">
-        <span class="nav-title">Blog Platform</span>
-    </a>
-    <a class="button" href="index.php">
-        <span class="button-text">Home</span>
-    </a>
-    <?php if (isset($_SESSION['user_id'])): ?>
+<header class="navbar">
+    <a class="nav-title-link" href="index.php"><span class="nav-title">Blog Platform</span></a>
+    <nav class="nav-links">
+        <a href="index.php">Home</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="account.php">My Account</a>
+            <a href="../server/logout.php">Logout</a>
+        <?php else: ?>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
+        <?php endif; ?>
+    </nav>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+</header>
 
-        <a class="button" href="account.php">
-            <span class="button-text">My Account</span>
-        </a>
-        <a class="button" href="../server/logout.php">
-            <span class="button-text">Logout</span>
-        </a>
-    <?php else: ?>
-        <a class="button" href="register.php">
-            <span class="button-text">Register</span>
-        </a>
-        <a class="button" href="login.php">
-            <span class="button-text">Login</span>
-        </a>
-    <?php endif; ?>
-</div>
-
-<!-- MAIN PAGE CONTENT -->
-<div id="main-content">
+<main id="main-content">
     <h2>Add a New Post</h2>
     <form action="../server/add_post.php" method="POST" enctype="multipart/form-data" class="add-post-form" onsubmit="return validateImageSize()">
         <div class="form-group">
@@ -73,7 +48,6 @@ if (!isset($_SESSION['user_id'])) {
             <label for="categories">Categories:</label>
             <div id="category-checkboxes">
                 <?php
-                // Fetch categories from the database
                 include '../server/abstractDAO.php';
                 $dao = new abstractDAO();
                 $mysqli = $dao->getMysqli();
@@ -93,6 +67,27 @@ if (!isset($_SESSION['user_id'])) {
         </div>
         <button type="submit" class="submit-button">Add Post</button>
     </form>
-</div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Blog Platform. All rights reserved.</p>
+</footer>
+
+<script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
+
+    function validateImageSize() {
+        const fileInput = document.getElementById('image');
+        const file = fileInput.files[0];
+        if (file && file.size > 600 * 1024) {
+            alert('Image size should not exceed 600 KB');
+            return false;
+        }
+        return true;
+    }
+</script>
 </body>
 </html>

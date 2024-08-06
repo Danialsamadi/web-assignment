@@ -1,67 +1,44 @@
 <?php
-session_start(); // Ensure session is started for user authentication
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Platform</title>
+    <title>Blog Post</title>
     <link rel="stylesheet" href="../styles/style.css">
-    <script>
-        function confirmLogoutAndRegister() {
-            if (confirm("You will be logged out to register a new user. Do you want to continue?")) {
-                window.location.href = "../server/logout.php?redirect=register";
-            }
-        }
-    </script>
 </head>
 <body>
-<!-- NAVBAR -->
-<div class="navbar">
-    <a class="nav-title-link" href="index.php">
-        <span class="nav-title">Blog Platform</span>
-    </a>
-    <a class="button" href="index.php">
-        <span class="button-text">Home</span>
-    </a>
-    <a class="button" href="add_post.php">
-        <span class="button-text">Add Post</span>
-    </a>
-    <?php if (isset($_SESSION['user_id'])): ?>
-        <a class="button" href="javascript:void(0);" onclick="confirmLogoutAndRegister()">
-            <span class="button-text">Register</span>
-        </a>
-        <a class="button" href="../server/logout.php">
-            <span class="button-text">Logout</span>
-        </a>
-    <?php else: ?>
-        <a class="button" href="register.php">
-            <span class="button-text">Register</span>
-        </a>
-        <a class="button" href="login.php">
-            <span class="button-text">Login</span>
-        </a>
-    <?php endif; ?>
-</div>
-</body>
-</html>
+<header class="navbar">
+    <a class="nav-title-link" href="index.php"><span class="nav-title">Blog Platform</span></a>
+    <nav class="nav-links">
+        <a href="index.php">Home</a>
+        <a href="add_post.php">Add Post</a>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <a href="account.php">My Account</a>
+            <a href="../server/logout.php">Logout</a>
+        <?php else: ?>
+            <a href="register.php">Register</a>
+            <a href="login.php">Login</a>
+        <?php endif; ?>
+    </nav>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+</header>
 
-<!-- MAIN CONTENT -->
-<div id="main-content">
-    <div id="post">
+<main id="main-content">
+    <article>
         <?php
         include '../server/abstractDAO.php';
-
         $dao = new abstractDAO();
         $mysqli = $dao->getMysqli();
 
         $post_id = $_GET['id'];
 
         $sql = "SELECT posts.title, posts.content, posts.image, posts.keywords, users.username, posts.created_at 
-                    FROM posts 
-                    JOIN users ON posts.user_id = users.id 
-                    WHERE posts.id=?";
+                FROM posts 
+                JOIN users ON posts.user_id = users.id 
+                WHERE posts.id=?";
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param("i", $post_id);
         $stmt->execute();
@@ -69,21 +46,19 @@ session_start(); // Ensure session is started for user authentication
         $stmt->bind_result($title, $content, $image, $keywords, $username, $created_at);
         $stmt->fetch();
 
-        echo "<h2>" . htmlspecialchars($title) . "</h2>";
-        echo "<p>by " . htmlspecialchars($username) . " on " . htmlspecialchars($created_at) . "</p>";
+        echo "<h2 class='post-title'>" . htmlspecialchars($title) . "</h2>";
+        echo "<p class='post-meta'>by " . htmlspecialchars($username) . " on " . htmlspecialchars($created_at) . "</p>";
         if (!empty($image)) {
             $imgData = base64_encode($image);
             $src = 'data:image/jpeg;base64,' . $imgData;
-            echo "<img src='" . $src . "' alt='Post Image' style='max-width:100%;height:auto;'/>";
+            echo "<img src='" . $src . "' alt='Post Image'/>";
         }
         echo "<div>" . nl2br(htmlspecialchars($content)) . "</div>";
         if (!empty($keywords)) {
             echo "<p><strong>Keywords:</strong> " . htmlspecialchars($keywords) . "</p>";
         }
-
         $stmt->close();
 
-        // Fetch categories for this post
         $sql = "SELECT categories.name FROM categories 
                 JOIN post_categories ON categories.id = post_categories.category_id 
                 WHERE post_categories.post_id=?";
@@ -102,9 +77,9 @@ session_start(); // Ensure session is started for user authentication
         }
         $stmt->close();
         ?>
-    </div>
+    </article>
 
-    <div id="comments">
+    <section id="comments">
         <h3>Comments</h3>
         <form id="commentForm">
             <textarea id="commentContent" name="content" required></textarea>
@@ -113,32 +88,43 @@ session_start(); // Ensure session is started for user authentication
         </form>
         <div id="commentsList">
             <?php
-            $sql = "SELECT comments.content, users.username, comments.created_at 
-                        FROM comments 
-                        JOIN users ON comments.user_id = users.id 
-                        WHERE comments.post_id=?";
+            $sql = "SELECT comments.id, comments.content, users.username, comments.created_at 
+                    FROM comments 
+                    JOIN users ON comments.user_id = users.id 
+                    WHERE comments.post_id=?";
             $stmt = $mysqli->prepare($sql);
             $stmt->bind_param("i", $post_id);
             $stmt->execute();
             $stmt->store_result();
-            $stmt->bind_result($comment_content, $comment_username, $comment_created_at);
+            $stmt->bind_result($comment_id, $comment_content, $comment_username, $comment_created_at);
 
             while ($stmt->fetch()) {
-                echo "<div class='comment'>";
+                echo "<div class='comment' id='comment-$comment_id'>";
                 echo "<p>" . nl2br(htmlspecialchars($comment_content)) . "</p>";
                 echo "<p>by " . htmlspecialchars($comment_username) . " on " . htmlspecialchars($comment_created_at) . "</p>";
+                if (isset($_SESSION['user_id']) && $_SESSION['username'] == $comment_username) {
+                    echo "<button class='delete-comment-button' data-comment-id='$comment_id'>Delete</button>";
+                }
                 echo "</div>";
             }
 
             $stmt->close();
             $mysqli->close();
-            ?>
+        ?>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
 <footer>
     <p>&copy; 2024 Blog Platform. All rights reserved.</p>
 </footer>
+
+<script>
+    function toggleMenu() {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('active');
+    }
+</script>
+<script src="../scripts/ajax_comments.js"></script>
 </body>
 </html>

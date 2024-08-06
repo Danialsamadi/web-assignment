@@ -8,27 +8,30 @@ body, h1, h2, h3, p, ul, li, a {
 /* General body styles */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     color: #333;
     line-height: 1.6;
+    padding-top: 50px;
 }
 
 /* Navbar styles */
-/* Existing styles */
-
-/* Add responsive styles */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #333;
-    padding: 10px;
+    padding: 10px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 .navbar a {
     color: white;
     text-decoration: none;
     padding: 10px;
+    font-size: 1.1em;
 }
 
 .navbar .menu-icon {
@@ -70,21 +73,37 @@ body {
 
 /* Main content styles */
 #main-content {
-    max-width: 800px;
+    max-width: 1000px;
     margin: 2em auto;
-    padding: 1em;
+    padding: 2em;
     background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    text-align: center; /* Center-align text inside main content */
 }
 
-h2 {
-    margin-bottom: 1em;
+@media (max-width: 768px) {
+    #main-content {
+        padding: 1em;
+    }
+}
+
+/* Post title and metadata styles */
+.post-title {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
+    color: #333;
+}
+
+.post-meta {
+    font-size: 1em;
+    color: #777;
+    text-align: center;
+    margin-bottom: 2em;
 }
 
 /* Form styles */
-.add-post-form, .add-category-form, .login-form {
+.add-post-form, .add-category-form, .login-form, .filter-form {
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -101,9 +120,10 @@ h2 {
 }
 
 input[type="text"], input[type="email"], input[type="password"], textarea, select, input[type="file"] {
-    padding: 0.5em;
+    padding: 0.75em;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 1em;
 }
 
 textarea {
@@ -111,25 +131,27 @@ textarea {
     height: 150px;
 }
 
-.submit-button {
-    background-color: #555;
+.submit-button, .delete-comment-button, .btn-primary {
+    background-color: #333;
     color: #fff;
     border: none;
     padding: 0.75em 1.5em;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
-    align-self: center; /* Center-align the submit button */
+    align-self: center;
+    font-size: 1em;
+    margin-top: 10px;
 }
 
-.submit-button:hover {
-    background-color: #777;
+.submit-button:hover, .delete-comment-button:hover, .btn-primary:hover {
+    background-color: #555;
 }
 
 .add-category-link {
     margin-top: 0.5em;
     display: inline-block;
-    color: #555;
+    color: #333;
     text-decoration: none;
     text-align: center;
 }
@@ -140,24 +162,23 @@ textarea {
 
 /* Article styles */
 article {
-    margin: 2em auto; /* Add auto margin to center the post element */
-    padding-bottom: 1em;
+    margin: 2em auto;
+    padding: 2em;
     border-bottom: 1px solid #ddd;
-    text-align: center; /* Center-align text inside articles */
-    max-width: 600px; /* Set a max-width for the article element */
+    max-width: 700px;
     background: #fff;
-    padding: 1em;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    text-align: center;
 }
 
 article h3 {
     margin-bottom: 0.5em;
-    text-align: center; /* Center-align the post title */
+    color: #333;
 }
 
 article p {
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
 }
 
 article a {
@@ -175,9 +196,29 @@ article img, #post img {
     height: auto;
     border-radius: 5px;
     margin-bottom: 1em;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+}
+
+.comment {
+    background: #f9f9f9;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.delete-comment-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.delete-comment-button:hover {
+    background-color: #c0392b;
 }
 
 /* Comments section styles */
@@ -192,37 +233,26 @@ article img, #post img {
 #commentForm textarea {
     width: 100%;
     height: 100px;
-    padding: 0.5em;
+    padding: 0.75em;
     margin-bottom: 0.5em;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 1em;
 }
 
 #commentForm input[type="submit"] {
-    background-color: #555;
+    background-color: #333;
     color: #fff;
     border: none;
-    padding: 0.5em 1em;
+    padding: 0.75em 1.5em;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 1em;
 }
 
 #commentForm input[type="submit"]:hover {
-    background-color: #777;
-}
-
-.comment {
-    background: #f9f9f9;
-    padding: 1em;
-    margin-bottom: 1em;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-.comment p {
-    margin-bottom: 0.5em;
+    background-color: #555;
 }
 
 /* Alert styles */
@@ -231,8 +261,8 @@ article img, #post img {
     margin-bottom: 1em;
     border-radius: 5px;
     font-weight: bold;
-    text-align: center; /* Center-align alert text */
-    width: 100%; /* Full width for better visibility */
+    text-align: center;
+    width: 100%;
 }
 
 .alert.success {
@@ -247,7 +277,65 @@ footer {
     color: #fff;
     text-align: center;
     padding: 1em 0;
-    position: fixed;
+    position: relative;
     width: 100%;
     bottom: 0;
+}
+
+/* Social Media Icons */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 1em;
+}
+
+.social-icons a {
+    color: #fff;
+    font-size: 1.5em;
+    text-decoration: none;
+}
+
+.social-icons a:hover {
+    color: #bbb;
+}
+
+/* Account Page Styles */
+.account-info {
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 2em;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.account-info h2 {
+    font-size: 2em;
+    margin-bottom: 1em;
+    text-align: center;
+    color: #333;
+}
+
+.account-info p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 1em;
+}
+
+.account-info .my-posts {
+    margin-top: 1.5em;
+}
+
+.account-info .my-posts h3 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+}
+
+.account-info .my-posts .post {
+    background: #f9f9f9;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
 }
