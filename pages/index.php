@@ -20,16 +20,12 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
     <nav class="nav-links">
         <a href="index.php">Home</a>
         <a href="add_post.php">Add Post</a>
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <a href="account.php">My Account</a>
-            <a href="../server/logout.php">Logout</a>
-        <?php else: ?>
-            <a href="register.php">Register</a>
-            <a href="login.php">Login</a>
-        <?php endif; ?>
+        <a href="register.php">Register</a>
+        <a href="login.php">Login</a>
     </nav>
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
 </header>
+
 
 <main id="main-content">
     <?php if (isset($_GET['message']) && isset($_GET['message_type'])): ?>
@@ -142,7 +138,7 @@ $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
 
 <script>
     function toggleMenu() {
-        const navLinks = document.querySelector('.nav-links');
+        var navLinks = document.querySelector('.nav-links');
         navLinks.classList.toggle('active');
     }
 
